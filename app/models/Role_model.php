@@ -4,7 +4,7 @@ class Role_model extends QW_Model {
 
 	public function __construct() {
 		parent::__construct ();
-		$this->_table = $this->_tables ["yang_role"];
+		$this->_table = $this->_tables ["role"];
 	}
 
 	public function get_roles($offset=0,$eachpage=0,$sortOrder='',$search='') {
@@ -28,7 +28,7 @@ class Role_model extends QW_Model {
 
 	public function getMenu()
     {
-        return $this->db->where("status=1")->order_by("sort", "asc")->get($this->_tables['yang_auth'])->result_array();
+        return $this->db->where("status=1")->order_by("sort", "asc")->get($this->_tables['auth'])->result_array();
     }
 
     public function delete_op($id)

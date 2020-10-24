@@ -4,7 +4,7 @@ class Auth_model extends QW_Model {
 
 	public function __construct() {
 		parent::__construct ();
-		$this->_table = $this->_tables ["yang_auth"];
+		$this->_table = $this->_tables ["auth"];
 	}
 
 	public function get_auths($offset=0,$eachpage=0,$sortOrder='',$search='') {
@@ -24,7 +24,7 @@ class Auth_model extends QW_Model {
 	
 	public function getMenu()
     {
-        return $this->db->where("status=1 and is_menu=1")->order_by("sort", "asc")->get($this->_tables['yang_auth'])->result_array();
+        return $this->db->where("status=1 and is_menu=1")->order_by("sort", "asc")->get($this->_tables['auth'])->result_array();
     }
 
 

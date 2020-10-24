@@ -9,9 +9,10 @@
 $config['tables'] = array(
     "logs" 					=> "logs",
     "users" 				=> "users",   //用户明细
-	"yang_role"             => "yang_role",//角色
-	"yang_auth"             => "yang_auth",//权限
-	"config"           		=> "yang_config",//系统配置
+	"role"             		=> "role",//角色
+	"auth"             		=> "auth",//权限
+	"config"           		=> "config",//系统配置
+	"back_up"           	=> "back_up",//数据备份
 );
 
 ?>

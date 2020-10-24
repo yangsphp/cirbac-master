@@ -1,48 +1,27 @@
 <?php $this->load->view('common/header')?>
 <?php //var_dump($buttons); ?>
 <div class="container-fluid p-t-15">
-
     <div class="row">
-
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header"><h4>菜单管理</h4></div>
-                <div class="card-body">
+				<ul class="nav nav-tabs page-tabs">
+				  <li > <a href="<?php echo site_url('database/index');?>">数据维护</a> </li>
+				  <li class="active"> <a href="#!">数据恢复</a> </li>
+				  <!--
+				  <li> <a href="lyear_pages_config_system.html">系统</a> </li>
+				  <li> <a href="lyear_pages_config_upload.html">上传</a> </li>
+				  -->
+				</ul>
+                <div class="tab-content">
 
                     <div id="toolbar2" class="toolbar-btn-action">
-                        <?php if (in_array('新增', $buttons)) { ?>
-                            <button id="btn_add" type="button" class="btn btn-cyan btn-sm m-r-5"
-                                    onclick="open_add_Label()">
-                                <span class="mdi mdi-plus" aria-hidden="true"></span>新增
-                            </button>
-                        <?php } if (in_array('删除', $buttons)) { ?>
+                        <?php if (in_array('删除_back', $buttons)) { ?>
                             <button type="button" class="btn btn-danger btn-sm  m-r-5" onclick="selected_del()">
                                 <span class="mdi mdi-window-close" aria-hidden="true"></span>删除
                             </button>
                         <?php } ?>
-                        <table id="auth_tab" style="text-align:center;word-break:break-all;"></table>
+                        <table id="database_tab" style="text-align:center;word-break:break-all;"></table>
                     </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="modal fade" id="add_auth" tabindex="-1" auth="dialog"
-         aria-labelledby="add_auth_Label">
-        <div class="modal-dialog" auth="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="add_auth_Label">新增菜单</h4>
-                </div>
-                <div class="modal-body" id="add-auth">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="save_auth()">添加</button>
                 </div>
             </div>
         </div>
@@ -50,9 +29,9 @@
 <?php $this->load->view('common/footer')?>
 <script type="text/javascript" src="<?php echo $skin; ?>new/js/main.min.js"></script>
     <script type="text/javascript">
-        $('#auth_tab').bootstrapTable({
+        $('#database_tab').bootstrapTable({
             classes: 'table table-bordered table-hover table-striped table-condensed table-responsive',
-            url: "<?php echo site_url('auth/show_auth');?>",
+            url: "<?php echo site_url('database/show_back');?>",
             method: 'post',
             dataType: 'json',        // 因为本示例中是跨域的调用,所以涉及到ajax都采用jsonp,
             uniqueId: 'id',
@@ -63,7 +42,7 @@
             showColumns: true,         // 是否显示所有的列
             showRefresh: true,         // 是否显示刷新按钮
             //showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
-            pagination: false,                    // 是否显示分页
+            pagination: true,                    // 是否显示分页
             sortName: 'id', 			// 要排序的字段
             sortOrder: "asc",                    // 排序方式
             queryParams: function (params) {
@@ -94,45 +73,28 @@
                     width: '100px',
                     //sortable: true,    // 是否排序
                     formatter: function (value, row, index) {
-                        var pageSize = $('#auth_tab').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
-                        var pageNumber = $('#auth_tab').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
+                        var pageSize = $('#database_tab').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
+                        var pageNumber = $('#database_tab').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
                         return pageSize * (pageNumber - 1) + index + 1;
                     }
                 }, {
-                    field: 'name', title: '名称', align: 'left', width: '200px',
+                    field: 'name', title: 'SQL文件', align: 'left'
                 }, {
-                    field: 'icon', title: '图标'
+                    field: 'size', title: '文件大小'
                 }, {
-                    field: 'url', title: '路径'
+                    field: 'date_entered', title: '备份时间'
                 },{
-                    field: 'sort', title: '排序'
-                },{
-                    title: '类型', formatter: function(value, row, index){
-						let menu_name = '<button class="btn btn-xs btn-round btn-primary">按钮</button>';
-						if (row.is_menu == 1) {
-							menu_name = '<button class="btn btn-xs btn-round btn-danger">菜单</button>';
-						}
-						return menu_name;
-					}
-                },{
-                    title: '状态', formatter: function(value, row, index){
-						if (row.status == 0) {
-							return '<button class="btn btn-xs btn-round btn-yellow" onclick="manageMenu('+row.id+', 1)" style="cursor: pointer;">已停用</button>';
-						} else {
-							return '<button class="btn btn-xs btn-round btn-success" onclick="manageMenu('+row.id+', 0)" style="cursor: pointer;">已启用</button>';
-						}
-					}
-                },{
-                    field: 'date_entered', title: '创建时间'
-                }, {
                     field: 'operate', title: '操作', width: '150px', align: 'center', formatter: btnGroup, // 自定义方法
                     events: {
-                        'click .edit-btn': function (event, value, row, index) {  //编辑生产指令单
-                            open_add_Label(row.id);
+                        'click .callback-btn': function (event, value, row, index) {  
+                            callback_operate(row.id);
                         },
-                        'click .del-btn': function (event, value, row, index) {  //删除生产指令单
-                            del_auth_operate(row.id, index);
-                        }
+                        'click .download-btn': function (event, value, row, index) {  
+                            download_operate(row.name, row.path);
+                        }, 
+						'click .del-btn': function (event, value, row, index) {
+							del_operate(row.id);
+						}
                     }
                 }],
 
@@ -144,57 +106,72 @@
 
         // 操作按钮
         function btnGroup(value, row, index) {
-            let html = '', delete_flag = '<?php echo in_array('删除', $buttons) ? 1 : 0?>', edit_flag = '<?php echo in_array('编辑', $buttons) ? 1 : 0?>';
-            if (edit_flag == 1) {
-                html += '<a href="#!" class="btn btn-xs btn-default m-r-5 edit-btn" title="编辑" data-toggle="tooltip"><i class="mdi mdi-pencil"></i></a>';
+            let html = '', back_flag = '<?php echo in_array('还原', $buttons) ? 1 : 0?>', download_flag = '<?php echo in_array('下载', $buttons) ? 1 : 0?>', delete_flag = '<?php echo in_array('删除', $buttons) ? 1 : 0?>';
+            if (back_flag == 1) {
+                html += '<a href="#!" class="btn btn-xs btn-default m-r-5 callback-btn" title="还原" data-toggle="tooltip"><i class="mdi mdi-wrench"></i></a>';
             }
-            if (delete_flag == 1) {
-                html += '<a href="#!" class="btn btn-xs btn-default m-r-5 del-btn" title="删除" data-toggle="tooltip"><i class="mdi mdi-window-close"></i></a>';
+            if (download_flag == 1) {
+                html += '<a href="#!" class="btn btn-xs btn-default m-r-5 download-btn" title="下载" data-toggle="tooltip"><i class="mdi mdi-download"></i></a>';
+            }
+			if (delete_flag == 1) {
+                html += '<a href="#!" class="btn btn-xs btn-default m-r-5 del-btn" title="删除" data-toggle="tooltip"><i class="mdi mdi-close"></i></a>';
             }
             return html;
         }
-
-
-        //打开添加菜单的弹出框
-        function open_add_Label(id = 0) {
-            $.get('<?php echo site_url("auth/add")?>?id=' + id, function (res) {
-                $("#add-auth").html(res.html);
-                $("#add_auth_Label").html(res.title)
-                $("#add_auth").modal();
-            }, 'json')
-        }
-
-
-        //保存菜单
-        function save_auth() {
-            lightyear.loading('show');
-            setTimeout(function () {
-                $.ajax({
-                    type: "POST",//方法类型
-                    url: "<?php echo site_url('auth/add_op');?>",
-                    data: $('#add_auth_form').serialize(),
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.code == 0) {
-                            lightyear.notify(result.msg, 'success', 3000);
-                            $('#auth_tab').bootstrapTable('refresh');
-                            $("#add_auth").modal('hide');
-                        } else {
-                            lightyear.notify(result.msg, 'danger', 3000);
-                        }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        lightyear.notify('对不起，失败', 'danger', 3000);
-                    },
-                    complete: function () {
-                        lightyear.loading('hide');
-                    }
-                });
-            }, 1e3);
-        }
-
+		
+		function callback_operate(id) {
+			$.confirm({
+                title: '还原提示',
+                content: '还原后不可恢复，请谨慎！',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+				tryAgain: {
+					text: '还原',
+					btnClass: 'btn-red',
+					action: function () {
+						lightyear.loading('show');
+						setTimeout(function () {
+							$.ajax({
+								type: "POST",//方法类型
+								url: "<?php echo site_url('database/callback_op');?>",//url
+								data: {id: id},
+								dataType: 'json',
+								success: function (result) {
+									if (result.code == 0) {
+										lightyear.loading('hide');
+										lightyear.notify(result.msg, 'success', 3000);
+										window.location.reload();
+									} else {
+										lightyear.loading('hide');
+										lightyear.notify(result.msg, 'danger', 3000);
+									}
+								},
+								error: function (XMLHttpRequest, textStatus, errorThrown) {
+									lightyear.notify('对不起' + XMLHttpRequest.statusText, 'danger', 3000);
+								}
+							});
+						}, 1e3);
+					}
+				},
+				close: {
+					text: '关闭'
+				}
+                }
+            });
+		}
+		
+		function download_operate(name, path) {
+			let tempa = document.createElement('a');
+			tempa.download = name;
+			tempa.href = path;
+			document.body.appendChild(tempa);
+			tempa.click();
+			tempa.remove()
+		}
+		
 		//删除菜单
-        function del_auth_operate(id, index) {
+        function del_operate(id, index) {
             $.confirm({
                 title: '删除提示',
                 content: '删除后不可恢复，请谨慎！',
@@ -209,14 +186,14 @@
                             setTimeout(function () {
                                 $.ajax({
                                     type: "POST",//方法类型
-                                    url: "<?php echo site_url('auth/delete_op');?>",//url
+                                    url: "<?php echo site_url('database/delete_op');?>",//url
                                     data: {id: id},
                                     dataType: 'json',
                                     success: function (result) {
                                         if (result.code == 0) {
                                             lightyear.loading('hide');
                                             lightyear.notify(result.msg, 'success', 3000);
-                                            $('#auth_tab').bootstrapTable('refresh');
+                                            $('#database_tab').bootstrapTable('refresh');
                                         } else {
                                             lightyear.loading('hide');
                                             lightyear.notify(result.msg, 'danger', 3000);
@@ -235,12 +212,12 @@
                 }
             });
         }
-
-        //批量删除
+		
+		//批量备份
         function selected_del() {
-            var selRows = $('#auth_tab').bootstrapTable("getSelections");
+            var selRows = $('#database_tab').bootstrapTable("getSelections");
             if (selRows.length == 0) {
-                lightyear.notify('请选择要删除的行', 'danger', 3000);
+                lightyear.notify('请选择要备份的行', 'danger', 3000);
                 return;
             }
             console.log(selRows);
@@ -259,28 +236,28 @@
                 typeAnimated: true,
                 buttons: {
                     tryAgain: {
-                        text: '确定',
+                        text: '删除',
                         btnClass: 'btn-red',
                         action: function () {
                             lightyear.loading('show');
                             setTimeout(function () {
                                 $.ajax({
                                     type: "POST",//方法类型
-                                    url: "<?php echo site_url('auth/delete_op');?>",//url
-                                    data: {id: postData},
+                                    url: "<?php echo site_url('database/delete_op');?>",//url
+                                    data: {id: id},
                                     dataType: 'json',
                                     success: function (result) {
                                         if (result.code == 0) {
                                             lightyear.loading('hide');
                                             lightyear.notify(result.msg, 'success', 3000);
-                                            $('#auth_tab').bootstrapTable('refresh');
+											$('#database_tab').bootstrapTable('refresh');
                                         } else {
                                             lightyear.loading('hide');
                                             lightyear.notify(result.msg, 'danger', 3000);
                                         }
                                     },
                                     error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                        lightyear.notify('删除失败', 'danger', 3000);
+                                        lightyear.notify('备份失败', 'danger', 3000);
                                     }
                                 });
                             }, 1e3);
@@ -292,6 +269,4 @@
                 }
             });
         }
-
-
     </script>

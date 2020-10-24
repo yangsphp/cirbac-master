@@ -8,8 +8,8 @@ class Admin_model extends QW_Model {
 	}
 
 	public function get_users($offset=0,$eachpage=0,$sortOrder='',$search='') {
-	    $join = array('yang_role', 'yang_role.id = users.role_code');
-		return $this->get_by_field('users.*, yang_role.name as role_name',$search,$sortOrder,$offset,$eachpage, '', '', $join);
+	    $join = array($this->_tables ["role"]." as role", 'role.id = '.$this->_table.'.role_code');
+		return $this->get_by_field($this->_table.'.*, role.name as role_name',$search,$sortOrder,$offset,$eachpage, '', '', $join);
 	}
   	public function get_user($search='') {
 		return $this->get_by_field('',$search);
@@ -25,16 +25,16 @@ class Admin_model extends QW_Model {
 	public function delete_users($id) 
 	{
         $this->db->where("id in ($id)");
-		return $this->db->delete('users');
+		return $this->db->delete($this->_table);
 	}
 
     public function insertAdmin($post)
     {
-        return $this->db->insert("users", $post);
+        return $this->db->insert($this->_table, $post);
     }
 
     public function getRole() {
-        return $this->db->get('yang_role')->result_array();
+        return $this->db->get($this->_tables ["role"])->result_array();
     }
 	
 	public function check_user ($username) {

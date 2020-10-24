@@ -26,15 +26,13 @@
 	</div>
 	<div class="form-group">
 		<label for="batch">是否菜单</label>
-		<div class="radio">
-		<label class="lyear-radio radio-primary">
-			<input type="radio" name="post[is_menu]" <?php echo $data['is_menu']==1?'checked':''?> value="1"><span> 是</span>
-		</label>
-		</div>
-		<div class="radio">
-		<label class="lyear-radio radio-inline radio-primary">
-		<input type="radio" name="post[is_menu]" <?php echo $data['is_menu']==0?'checked':''?> value="0"><span> 否</span>
-		</label>
+		<div class="clearfix">
+			<label class="lyear-radio radio-inline radio-primary">
+					<input type="radio" name="post[is_menu]" <?php echo $data['is_menu']==1?'checked':''?> value="1"><span> 是</span>
+				</label>
+			<label class="lyear-radio radio-inline radio-primary">
+				<input type="radio" name="post[is_menu]" <?php echo $data['is_menu']==0?'checked':''?> value="0"><span> 否</span>
+				</label>
 		</div>
 	</div>
 	<input type="hidden" name="id" value="<?php echo $id?>">

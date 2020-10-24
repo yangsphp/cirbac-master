@@ -43,7 +43,7 @@ class QW_Controller extends CI_Controller
         if ($menuIds) {
             $where .= " and id in($menuIds)";
         }
-        $auth = $this->db->select('id, name, url')->from($tables['yang_auth'])->where($where)->get()->result_array();
+        $auth = $this->db->select('id, name, url')->from($tables['auth'])->where($where)->get()->result_array();
         $button_array = array();
         foreach ($auth as $k => $v) {
             $button_array[] = $v['name'];
@@ -60,21 +60,6 @@ class QW_Controller extends CI_Controller
 		$config = $this->System->getConfigs('basic');
 		$this->load->vars($config);
 	}
-
-    /**
-     * 用户按钮权限判断
-     * @param $url
-     * @return bool
-     */
-    public function checkUserButtonPrivilege($url)
-    {
-        return 1;
-        $menuUrl = $this->session->userdata("menuUrl");
-        if (in_array($url, $menuUrl)) {
-            return 1;
-        }
-        return 0;
-    }
 
     /**
      * 渲染左侧菜单数据
