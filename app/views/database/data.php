@@ -141,7 +141,7 @@
 									if (result.code == 0) {
 										lightyear.loading('hide');
 										lightyear.notify(result.msg, 'success', 3000);
-										window.location.reload();
+										//window.location.reload();
 									} else {
 										lightyear.loading('hide');
 										lightyear.notify(result.msg, 'danger', 3000);
