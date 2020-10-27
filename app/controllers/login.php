@@ -8,7 +8,7 @@ class Login extends QW_Controller
     {
         parent::__construct();
         $this->load->model("Admin_model", "admin_model");
-        $this->load->model("Log_model", "log_model");
+        $this->load->model("Logs_model", "log_model");
         $this->lang->load("user");
     }
 

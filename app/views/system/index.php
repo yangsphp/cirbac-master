@@ -1,6 +1,5 @@
 <?php $this->load->view('common/header')?>
 <div class="container-fluid p-t-15">
-  
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
@@ -8,8 +7,9 @@
           <li class="active"> <a href="#!">基本</a> </li>
 		  <!--
           <li> <a href="lyear_pages_config_system.html">系统</a> </li>
-          <li> <a href="lyear_pages_config_upload.html">上传</a> </li>
 		  -->
+          <li> <a href="<?php echo site_url('system/upload')?>">上传</a> </li>
+		  
         </ul>
         <div class="tab-content">
           <div class="tab-pane active">

@@ -24,4 +24,10 @@ class System extends QW_Controller
 		}
 		die(json_encode(array("code" => 1, "msg" => "设置失败")));
 	}
+	
+	public function upload()
+	{
+		$config = $this->System->getConfigs('upload');
+        $this->load->view('system/upload', $config);
+	}
 }
