@@ -1,4 +1,6 @@
 <?php $this->load->view('common/header')?>
+<!--日期选择插件-->
+<link rel="stylesheet" href="<?php echo $skin; ?>new/js/bootstrap-datepicker/bootstrap-datepicker3.min.css">
 <?php //var_dump($buttons); ?>
 <div class="container-fluid p-t-15">
     <div class="row">
@@ -6,23 +8,20 @@
             <div class="card">
 				<div class="card-header"><h4>登录日志</h4></div>
 				<div class="card-toolbar clearfix">
-					<form class="pull-right search-bar" method="get" action="#!" role="form">
-					  <div class="input-group">
-						<div class="input-group-btn">
-						  <input type="hidden" name="search_field" id="search-field" value="title">
-						  <button class="btn btn-default dropdown-toggle" id="search-btn" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
-						  标题 <span class="caret"></span>
-						  </button>
-						  <ul class="dropdown-menu">
-							<li> <a tabindex="-1" href="javascript:void(0)" data-field="title">标题</a> </li>
-							<li> <a tabindex="-1" href="javascript:void(0)" data-field="cat_name">栏目</a> </li>
-						  </ul>
-						</div>
-						<input type="text" class="form-control" value="" name="keyword" placeholder="请输入名称">
-					  </div>
-					</form>
-					<div class="toolbar-btn-action">
+					<div class="toolbar-btn-action" style="display: flex;">
 						<!--操作按钮-->
+						<div style="width:300px;margin-right:20px;" class="input-daterange input-group js-datepicker" data-auto-close="false" data-date-format="yyyy-mm-dd">
+						  <input class="form-control" type="text" id="start_date" name="start_date" placeholder="从">
+						  <span class="input-group-addon"><i class="mdi mdi-chevron-right"></i></span>
+						  <input class="form-control" type="text" id="end_date" name="end_date" placeholder="至">
+						</div>
+						<div class="input-group" style="width:300px;">
+							<input type="text" class="form-control" id="keyword" placeholder="请输入关键词...">
+							<span class="input-group-btn">
+							  <button class="btn btn-cyan" type="button" onclick="search()">搜索</button>
+							  <button class="btn btn-danger" type="button" onclick="reset()">重置</button>
+							</span>
+						</div>
 					</div>
 				</div>
                 <div class="card-body">
@@ -34,6 +33,9 @@
         </div>
     </div>
 <?php $this->load->view('common/footer')?>
+<!--日期选择插件-->
+<script src="<?php echo $skin; ?>new/js/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<script src="<?php echo $skin; ?>new/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 <script type="text/javascript" src="<?php echo $skin; ?>new/js/main.min.js"></script>
     <script type="text/javascript">
         $('#logs_tab').bootstrapTable({
@@ -53,13 +55,15 @@
             sortName: 'id', 			// 要排序的字段
             sortOrder: "desc",                    // 排序方式
             queryParams: function (params) {
-                console.log(params)
+                //console.log(params)
                 var temp = {
                     limit: params.limit,         // 每页数据量
                     offset: params.offset,       // sql语句起始索引
                     //page: (params.offset / params.limit) + 1,
                     sort: params.sort,           // 排序的列名
-                    search: params.search,       // 搜索
+                    search: $('#keyword').val(), // 搜索
+					start_date: $('#start_date').val(), // 搜索
+					end_date: $('#end_date').val(),     // 搜索
                     sortOrder: params.order      // 排序方式'asc' 'desc'
                 };
                 return temp;
@@ -90,4 +94,13 @@
             }
 
         });
+		function search() {
+			$('#logs_tab').bootstrapTable('refresh');
+		}
+		function reset() {
+			$('#start_date').val('')
+			$('#end_date').val('')
+			$('#keyword').val('')
+			$('#logs_tab').bootstrapTable('refresh');
+		}
     </script>

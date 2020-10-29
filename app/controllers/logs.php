@@ -17,11 +17,24 @@ class Logs extends QW_Controller
 
     public function show_logs()
     {
-        $search = $this->input->post('search') ? 'username like "%'.$this->input->post('search').'%"' : '';
+		$search = " 1=1 ";
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+		$keyword = $this->input->post('search');
+		if($start_date) {
+			$search .= " and logindate >= ".strtotime($start_date);
+		}
+		if($end_date) {
+			$search .= " and logindate <= ".strtotime($end_date);
+		}
+		if($keyword) {
+			$search .= ' and username like "%'.$keyword.'%"';
+		}
         $eachpage = isset($_POST['limit']) ? $_POST['limit'] : 10;
         $offset = isset($_POST['offset']) ? $_POST['offset'] : 0;
         $sortOrder = isset($_POST['sort']) ? $_POST['sort'] . " " . $_POST['sortOrder'] : "";
         $allLogs = $this->Logs->get_logs($offset, $eachpage, $sortOrder, $search);
+		//echo $this->db->last_query();exit;
 		foreach($allLogs as $k => $v) {
 			$allLogs[$k]['logindate'] = date('Y-m-d H:i:s', $v['logindate']);
 		}

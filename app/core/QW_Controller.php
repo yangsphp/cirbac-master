@@ -11,7 +11,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class QW_Controller extends CI_Controller
 {
-
+	public $setting = array();
     public function __construct()
     {
         parent::__construct();
@@ -29,6 +29,7 @@ class QW_Controller extends CI_Controller
             $this->getButtons();
         }
 		$this->getConfigs();
+		//$this->upload();
     }
 
     /**
@@ -51,14 +52,25 @@ class QW_Controller extends CI_Controller
         $this->load->vars(array('buttons' => $button_array));
     }
 	
+	public function uploadFile($file)
+	{
+		$userid = $this->session->userdata('user_id');
+		$tables = $this->config->item("tables");
+		$upload_table = $tables['upload_'.($userid%10)];
+		var_dump($userid);
+		var_dump($this->setting);
+		echo $upload_table;exit;
+	}
+	
 	/**
 	* 获取基本配置
 	*/
 	public function getConfigs()
 	{
 		$this->load->model("System_model", 'System');
-		$config = $this->System->getConfigs('basic');
+		$config = $this->System->getConfigs();
 		$this->load->vars($config);
+		$this->setting = $config;
 	}
 
     /**
